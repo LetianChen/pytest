@@ -9,7 +9,6 @@ from typing import Optional
 from typing import Tuple
 from typing import TYPE_CHECKING
 from typing import Union
-from xml.dom import minidom
 
 import xmlschema
 
@@ -23,6 +22,7 @@ from _pytest.reports import BaseReport
 from _pytest.reports import TestReport
 from _pytest.stash import Stash
 import pytest
+import defusedxml.minidom
 
 
 @pytest.fixture(scope="session")
@@ -48,7 +48,7 @@ class RunAndParse:
         if family == "xunit2":
             with xml_path.open(encoding="utf-8") as f:
                 self.schema.validate(f)
-        xmldoc = minidom.parse(str(xml_path))
+        xmldoc = defusedxml.minidom.parse(str(xml_path))
         return result, DomNode(xmldoc)
 
 
@@ -1504,7 +1504,7 @@ def test_global_properties(pytester: Pytester, xunit_family: str) -> None:
     log.add_global_property("bar", "2")
     log.pytest_sessionfinish()
 
-    dom = minidom.parse(str(path))
+    dom = defusedxml.minidom.parse(str(path))
 
     properties = dom.getElementsByTagName("properties")
 
@@ -1544,7 +1544,7 @@ def test_url_property(pytester: Pytester) -> None:
     node_reporter.append_failure(test_report)
     log.pytest_sessionfinish()
 
-    test_case = minidom.parse(str(path)).getElementsByTagName("testcase")[0]
+    test_case = defusedxml.minidom.parse(str(path)).getElementsByTagName("testcase")[0]
 
     assert (
         test_case.getAttribute("url") == test_url

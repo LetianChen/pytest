@@ -45,6 +45,7 @@ dependencies = [
     "packaging",
     "pluggy<2.0,>=1.4",
     'tomli>=1; python_version < "3.11"',
+    "defusedxml==0.7.1",
 ]
 [project.optional-dependencies]
 dev = [
