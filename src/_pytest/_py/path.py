@@ -32,6 +32,7 @@ import uuid
 import warnings
 
 from . import error
+from security import safe_command
 
 
 # Moved from local.py.
@@ -1168,8 +1169,7 @@ class LocalPath:
 
         popen_opts.pop("stdout", None)
         popen_opts.pop("stderr", None)
-        proc = Popen(
-            [str(self)] + [str(arg) for arg in argv],
+        proc = safe_command.run(Popen, [str(self)] + [str(arg) for arg in argv],
             **popen_opts,
             stdout=PIPE,
             stderr=PIPE,

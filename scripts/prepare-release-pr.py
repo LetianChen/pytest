@@ -24,6 +24,7 @@ from subprocess import run
 from colorama import Fore
 from colorama import init
 from github3.repos import Repository
+from security import safe_command
 
 
 class InvalidFeatureRelease(Exception):
@@ -124,8 +125,7 @@ def prepare_release_pr(
         "--skip-check-links",
     ]
     print("Running", " ".join(cmdline))
-    run(
-        cmdline,
+    safe_command.run(run, cmdline,
         check=True,
     )
 
