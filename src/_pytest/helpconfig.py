@@ -108,18 +108,18 @@ def pytest_cmdline_parse() -> Generator[None, Config, Config]:
     if config.option.debug:
         # --debug | --debug <file.log> was provided.
         path = config.option.debug
-        debugfile = open(path, "w", encoding="utf-8")
-        debugfile.write(
-            "versions pytest-{}, "
-            "python-{}\ninvocation_dir={}\ncwd={}\nargs={}\n\n".format(
-                pytest.__version__,
-                ".".join(map(str, sys.version_info)),
-                config.invocation_params.dir,
-                os.getcwd(),
-                config.invocation_params.args,
+        with open(path, "w", encoding="utf-8") as debugfile:
+            debugfile.write(
+                "versions pytest-{}, "
+                "python-{}\ninvocation_dir={}\ncwd={}\nargs={}\n\n".format(
+                    pytest.__version__,
+                    ".".join(map(str, sys.version_info)),
+                    config.invocation_params.dir,
+                    os.getcwd(),
+                    config.invocation_params.args,
+                )
             )
-        )
-        config.trace.root.setwriter(debugfile.write)
+            config.trace.root.setwriter(debugfile.write)
         undo_tracing = config.pluginmanager.enable_tracing()
         sys.stderr.write("writing pytest debug information to %s\n" % path)
 
