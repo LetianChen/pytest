@@ -20,6 +20,7 @@ from _pytest.monkeypatch import MonkeyPatch
 from _pytest.outcomes import OutcomeException
 from _pytest.pytester import Pytester
 import pytest
+from security import safe_command
 
 
 if sys.version_info[:2] < (3, 11):
@@ -818,7 +819,7 @@ def test_pytest_cmdline_main(pytester: Pytester) -> None:
     )
     import subprocess
 
-    popen = subprocess.Popen([sys.executable, str(p)], stdout=subprocess.PIPE)
+    popen = safe_command.run(subprocess.Popen, [sys.executable, str(p)], stdout=subprocess.PIPE)
     popen.communicate()
     ret = popen.wait()
     assert ret == 0
