@@ -11,6 +11,7 @@ from py import error
 from py.path import local
 
 import pytest
+import fickling
 
 
 @contextlib.contextmanager
@@ -727,9 +728,8 @@ class TestLocalPath(CommonFSTests):
             d = {"answer": 42}
             path.dump(d, bin=bin)
             f = path.open("rb+")
-            import pickle
 
-            dnew = pickle.load(f)
+            dnew = fickling.load(f)
             assert d == dnew
         finally:
             f.close()
