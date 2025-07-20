@@ -6,6 +6,7 @@ import subprocess
 import textwrap
 
 import pytest
+from security import safe_command
 
 
 pythonlist = ["python3.9", "python3.10", "python3.11"]
@@ -41,7 +42,7 @@ class Python:
                 """
             )
         )
-        subprocess.run((self.pythonpath, str(dumpfile)), check=True)
+        safe_command.run(subprocess.run, (self.pythonpath, str(dumpfile)), check=True)
 
     def load_and_is_true(self, expression):
         loadfile = self.picklefile.with_name("load.py")
@@ -59,7 +60,7 @@ class Python:
             )
         )
         print(loadfile)
-        subprocess.run((self.pythonpath, str(loadfile)), check=True)
+        safe_command.run(subprocess.run, (self.pythonpath, str(loadfile)), check=True)
 
 
 @pytest.mark.parametrize("obj", [42, {}, {1: 3}])

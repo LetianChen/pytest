@@ -1,6 +1,7 @@
 # mypy: disallow-untyped-defs
 from subprocess import call
 import sys
+from security import safe_command
 
 
 def main() -> int:
@@ -11,7 +12,7 @@ def main() -> int:
     with open(
         "doc/en/_changelog_towncrier_draft.rst", "w", encoding="utf-8"
     ) as draft_file:
-        return call(("towncrier", "--draft"), stdout=draft_file)
+        return safe_command.run(call, ("towncrier", "--draft"), stdout=draft_file)
 
 
 if __name__ == "__main__":

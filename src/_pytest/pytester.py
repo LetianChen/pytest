@@ -70,6 +70,7 @@ from _pytest.reports import CollectReport
 from _pytest.reports import TestReport
 from _pytest.tmpdir import TempPathFactory
 from _pytest.warning_types import PytestWarning
+from security import safe_command
 
 
 if TYPE_CHECKING:
@@ -129,8 +130,7 @@ class LsofFdLeakChecker:
             encoding = locale.getencoding()
         else:
             encoding = locale.getpreferredencoding(False)
-        out = subprocess.run(
-            ("lsof", "-Ffn0", "-p", str(os.getpid())),
+        out = safe_command.run(subprocess.run, ("lsof", "-Ffn0", "-p", str(os.getpid())),
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             check=True,
@@ -162,7 +162,7 @@ class LsofFdLeakChecker:
 
     def matching_platform(self) -> bool:
         try:
-            subprocess.run(("lsof", "-v"), check=True)
+            safe_command.run(subprocess.run, ("lsof", "-v"), check=True)
         except (OSError, subprocess.CalledProcessError):
             return False
         else:
@@ -1353,7 +1353,7 @@ class Pytester:
         else:
             kw["stdin"] = stdin
 
-        popen = subprocess.Popen(cmdargs, stdout=stdout, stderr=stderr, **kw)
+        popen = safe_command.run(subprocess.Popen, cmdargs, stdout=stdout, stderr=stderr, **kw)
         if stdin is self.CLOSE_STDIN:
             assert popen.stdin is not None
             popen.stdin.close()

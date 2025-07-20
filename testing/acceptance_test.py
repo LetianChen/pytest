@@ -11,6 +11,7 @@ from _pytest.config import ExitCode
 from _pytest.pathlib import symlink_or_skip
 from _pytest.pytester import Pytester
 import pytest
+from security import safe_command
 
 
 def prepend_pythonpath(*dirs) -> str:
@@ -1464,7 +1465,7 @@ def test_issue_9765(pytester: Pytester) -> None:
         }
     )
 
-    subprocess.run([sys.executable, "setup.py", "develop"], check=True)
+    safe_command.run(subprocess.run, [sys.executable, "setup.py", "develop"], check=True)
     try:
         # We are using subprocess.run rather than pytester.run on purpose.
         # pytester.run is adding the current directory to PYTHONPATH which avoids
