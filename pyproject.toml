@@ -45,6 +45,7 @@ dependencies = [
     "packaging",
     "pluggy<2.0,>=1.4",
     'tomli>=1; python_version < "3.11"',
+    "fickling>=0.1.3,~=0.1.0",
 ]
 [project.optional-dependencies]
 dev = [
